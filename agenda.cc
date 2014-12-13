@@ -7,7 +7,7 @@ using namespace std;
 
 int main()
 {
-  int accion;
+  int accion, aux1; string aux;
   Interfaz in;
   Cliente clien;
 
@@ -23,6 +23,20 @@ int main()
         in.addCliente();
         break;
       case 2:
+        cout<<"\nIntroduce el apellido del cliente a buscar:";
+        aux1=0;
+        cin>> aux;
+        aux1=in.buscarCliente(aux);
+        switch(aux1)
+        {
+          case 0:
+            cout<<"\nNo existe el cliente "<<aux<<".\n";
+            break;
+          case 1:
+            cout<<"\nDatos del cliente:\n";
+            in.verCliente();
+            break;
+        }
         break;
       case 3:
         break;
