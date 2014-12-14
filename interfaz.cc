@@ -1,8 +1,11 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <cstdlib>
 #include "cliente.h"
 #include "interfaz.h"
+
+using namespace std;
 
 void Interfaz:: menu()
 {
@@ -41,7 +44,7 @@ void Interfaz:: crearCliente()
   cin>> aux;
   client.setRedesSociales(aux);
   client.setVistas(0);
-//  return clien;
+//  return client;
 }
 
 void Interfaz:: verCliente()
@@ -58,15 +61,81 @@ void Interfaz:: verCliente()
 
 int Interfaz:: addCliente()
 {
-  fstream archivo("agenda.txt", ios:: in);
+  ofstream archivo("agenda.txt", ios::app);
 
-  archivo<<client.getDNI()<<","<<client.getNombre()<<","<<client.getApellidos()<<","<<client.getTlfno()<<","<<client.getCorreo()<<","<<client.getDireccion()<<","<<client.getRedesSociales()<<","<<client.getVistas();
-
+ // setCliente(persona);
+  archivo<<client.getDNI()<<","<<client.getNombre()<<","<<client.getApellidos()<<","<<client.getTlfno()<<","<<client.getCorreo()<<","<<client.getDireccion()<<","<<client.getRedesSociales()<<","<<client.getVistas()<<"\n";
   archivo.close();
   return 1;
 }
 
-int Interfaz:: buscarCliente()
+int Interfaz:: buscarCliente(string apellido)
 {
-  return 1;
+  ifstream archivo("agenda.txt");
+  char dni[128], nombre[128], apellidos[128], tlfno[128], correo[128], direccion[128], redes[128], vistas[128];
+  int existe=0;
+  while( archivo.getline(dni,128, ',') )
+  {
+    archivo.getline(nombre, 128, ',');
+    archivo.getline(apellidos, 128, ',');
+    archivo.getline(tlfno, 128, ',');
+    archivo.getline(correo, 128, ',');
+    archivo.getline(direccion, 128, ',');
+    archivo.getline(redes, 128, ',');
+    archivo.getline(vistas, 128, '\n');
+    if(apellido==apellidos)
+    {
+      existe=1;
+      break;
+    }
+  }
+  archivo.close();
+  if(existe==1)
+  {
+    client.setDNI(dni);
+    client.setNombre(nombre);
+    client.setApellidos(apellido);
+    client.setTlfno(tlfno);
+    client.setCorreo(correo);
+    client.setDireccion(direccion);
+    client.setRedesSociales(redes);
+    client.setVistas(atoi(vistas));
+  }
+  return existe;
+}
+
+int Interfaz:: borrarCliente(string apellido)
+{
+  int existe=0;
+  Interfaz inter;
+  char dni[128], nombre[128], apellidos[128], tlfno[128], correo[128], direccion[128], redes[128], vistas[128];
+  existe=inter.buscarCliente(apellido);
+  if(existe)
+  {
+    ifstream archivo("agenda.txt");
+    ofstream archivo2("tmp.txt");
+    while( archivo.getline(dni, 128, ','))
+    {
+      archivo.getline(nombre, 128, ',');
+      archivo.getline(apellidos, 128, ',');
+      archivo.getline(tlfno, 128, ',');
+      archivo.getline(correo, 128, ',');
+      archivo.getline(direccion, 128, ',');
+      archivo.getline(redes, 128, ',');
+      archivo.getline(vistas, 128, '\n');
+      if(apellidos!=apellido)
+      {
+          archivo2<<dni<<","<<nombre<<","<<apellidos<<","<<tlfno<<","<<correo<<","<<direccion<<","<<redes<<","<<vistas<<"\n";
+      }
+    }
+    archivo.close();
+    archivo2.close();
+    remove("agenda.txt");
+    rename("tmp.txt", "agenda.txt");
+    return existe;
+  }
+  else
+  {
+    return existe;
+  }
 }
