@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <cstdlib>
+#include <list>
 #include "cliente.h"
 #include "interfaz.h"
 
@@ -9,71 +10,87 @@ using namespace std;
 
 void Interfaz:: menu()
 {
-  cout<<"\nAccion a realizar:";
+  cout<<"\nElige accion a realizar:";
   cout<<"\nCrear cliente-------------->1.";
   cout<<"\nBuscar cliente------------->2.";
   cout<<"\nBorrar cliente------------->3.";
   cout<<"\nModificar cliente---------->4.";
-  cout<<"\nCrear copia de seguridad--->5.";
-  cout<<"\nOrdenar clientes----------->6.";
+  cout<<"\nOrdenar clientes----------->5.";
+  cout<<"\nCrear copia de seguridad--->6.";
   cout<<"\nSalir---------------------->0.\n";
 }
 
-void Interfaz:: crearCliente()
+int Interfaz:: menuMod()
 {
-  string aux;
+  int aux;
+  cout<<"\nSelecciona que modificar:";
+  cout<<"\nDNI------------------------>1.";
+  cout<<"\nNombre--------------------->2.";
+  cout<<"\nApellidos------------------>3.";
+  cout<<"\nTlfno---------------------->4.";
+  cout<<"\nCorreo--------------------->5.";
+  cout<<"\nDireccion------------------>6.";
+  cout<<"\nRedes---------------------->7.\n";
+  cin>>aux;
+  return aux;
+}
+
+Cliente Interfaz:: crearCliente()
+{
+  string aux; Cliente tipo;
   cout<<"\nDNI:";
   cin>> aux;
-  client.setDNI(aux);
+  tipo.setDNI(aux);
   cout<<"\nNombre:";
   cin>> aux;
-  client.setNombre(aux);
+  tipo.setNombre(aux);
   cout<<"\nApellidos:";
   cin>> aux;
-  client.setApellidos(aux);
+  tipo.setApellidos(aux);
   cout<<"\nTlfno:";
   cin>> aux;
-  client.setTlfno(aux);
+  tipo.setTlfno(aux);
   cout<<"\nCorreo:";
   cin>> aux;
-  client.setCorreo(aux);
+  tipo.setCorreo(aux);
   cout<<"\nDireccion:";
   cin>> aux;
-  client.setDireccion(aux);
+  tipo.setDireccion(aux);
   cout<<"\nRedes Sociales:";
   cin>> aux;
-  client.setRedesSociales(aux);
-  client.setVistas(0);
-//  return client;
+  tipo.setRedesSociales(aux);
+  tipo.setVistas(0);
+  return tipo;
 }
 
-void Interfaz:: verCliente()
+void Interfaz:: verCliente(Cliente aux)
 {
-  cout<<"DNI:"<<client.getDNI();
-  cout<<"\nNombre:"<<client.getNombre();
-  cout<<"\nApellidos:"<<client.getApellidos();
-  cout<<"\nTlfno:"<<client.getTlfno();
-  cout<<"\nCorreo:"<<client.getCorreo();
-  cout<<"\nDireccion:"<<client.getDireccion();
-  cout<<"\nRedes Sociales:"<<client.getRedesSociales();
-  cout<<"\nVeces visitado:"<<client.getVistas();
+  cout<<"\nDNI:"<<aux.getDNI();
+  cout<<"\nNombre:"<<aux.getNombre();
+  cout<<"\nApellidos:"<<aux.getApellidos();
+  cout<<"\nTlfno:"<<aux.getTlfno();
+  cout<<"\nCorreo:"<<aux.getCorreo();
+  cout<<"\nDireccion:"<<aux.getDireccion();
+  cout<<"\nRedes Sociales:"<<aux.getRedesSociales();
+  cout<<"\nVeces visitado:"<<aux.getVistas()<<"\n";
 }
 
-int Interfaz:: addCliente()
+int Interfaz:: addCliente(Cliente tipo, string nombre)
 {
-  ofstream archivo("agenda.txt", ios::app);
+  ofstream archivo(nombre.c_str(), ios::app);
 
  // setCliente(persona);
-  archivo<<client.getDNI()<<","<<client.getNombre()<<","<<client.getApellidos()<<","<<client.getTlfno()<<","<<client.getCorreo()<<","<<client.getDireccion()<<","<<client.getRedesSociales()<<","<<client.getVistas()<<"\n";
+  archivo<<tipo.getDNI()<<","<<tipo.getNombre()<<","<<tipo.getApellidos()<<","<<tipo.getTlfno()<<","<<tipo.getCorreo()<<","<<tipo.getDireccion()<<","<<tipo.getRedesSociales()<<","<<tipo.getVistas()<<"\n";
   archivo.close();
   return 1;
 }
 
-int Interfaz:: buscarCliente(string apellido)
+Cliente Interfaz:: buscarCliente(string apellido, int &existe)
 {
   ifstream archivo("agenda.txt");
   char dni[128], nombre[128], apellidos[128], tlfno[128], correo[128], direccion[128], redes[128], vistas[128];
-  int existe=0;
+  Cliente aux;
+  existe=0;
   while( archivo.getline(dni,128, ',') )
   {
     archivo.getline(nombre, 128, ',');
@@ -92,16 +109,16 @@ int Interfaz:: buscarCliente(string apellido)
   archivo.close();
   if(existe==1)
   {
-    client.setDNI(dni);
-    client.setNombre(nombre);
-    client.setApellidos(apellido);
-    client.setTlfno(tlfno);
-    client.setCorreo(correo);
-    client.setDireccion(direccion);
-    client.setRedesSociales(redes);
-    client.setVistas(atoi(vistas));
+    aux.setDNI(dni);
+    aux.setNombre(nombre);
+    aux.setApellidos(apellido);
+    aux.setTlfno(tlfno);
+    aux.setCorreo(correo);
+    aux.setDireccion(direccion);
+    aux.setRedesSociales(redes);
+    aux.setVistas(atoi(vistas));
   }
-  return existe;
+  return aux;
 }
 
 int Interfaz:: borrarCliente(string apellido)
@@ -109,7 +126,8 @@ int Interfaz:: borrarCliente(string apellido)
   int existe=0;
   Interfaz inter;
   char dni[128], nombre[128], apellidos[128], tlfno[128], correo[128], direccion[128], redes[128], vistas[128];
-  existe=inter.buscarCliente(apellido);
+  Cliente clien;
+  clien=inter.buscarCliente(apellido, existe);
   if(existe)
   {
     ifstream archivo("agenda.txt");
@@ -125,7 +143,7 @@ int Interfaz:: borrarCliente(string apellido)
       archivo.getline(vistas, 128, '\n');
       if(apellidos!=apellido)
       {
-          archivo2<<dni<<","<<nombre<<","<<apellidos<<","<<tlfno<<","<<correo<<","<<direccion<<","<<redes<<","<<vistas<<"\n";
+        archivo2<<dni<<","<<nombre<<","<<apellidos<<","<<tlfno<<","<<correo<<","<<direccion<<","<<redes<<","<<vistas<<"\n";
       }
     }
     archivo.close();
@@ -138,4 +156,91 @@ int Interfaz:: borrarCliente(string apellido)
   {
     return existe;
   }
+}
+
+list <Cliente> Interfaz:: getLista()
+{
+  list <Cliente> aux;
+  char dni[128], nombre[128], apellidos[128], tlfno[128], correo[128], direccion[128], redes[128], vistas[128];
+
+  ifstream archivo("agenda.txt");
+
+  while( archivo.getline(dni, 128, ','))
+  {
+    archivo.getline(nombre, 128, ',');
+    archivo.getline(apellidos, 128, ',');
+    archivo.getline(tlfno, 128, ',');
+    archivo.getline(correo, 128, ',');
+    archivo.getline(direccion, 128, ',');
+    archivo.getline(redes, 128, ',');
+    archivo.getline(vistas, 128, '\n');
+
+    client.setDNI(dni);
+    client.setNombre(nombre);
+    client.setApellidos(apellidos);
+    client.setTlfno(tlfno);
+    client.setCorreo(correo);
+    client.setDireccion(direccion);
+    client.setRedesSociales(redes);
+    client.setVistas(atoi(vistas));
+
+    aux.push_back(client);
+  }
+  return aux;
+}
+
+void Interfaz:: modificaCliente(string apellido, string aux, int accion)
+{
+  list <Cliente> lista;
+  list <Cliente>:: iterator i;
+  Interfaz in;
+  lista=in.getLista();
+  for(i=lista.begin(); i!=lista.end(); i++)
+  {
+    if(i->getApellidos()==apellido)
+    {
+      switch(accion)
+      {
+        case 1:
+          i->setDNI(aux);
+          break;
+        case 2:
+          i->setNombre(aux);
+          break;
+        case 3:
+          i->setApellidos(aux);
+          break;
+        case 4:
+          i->setTlfno(aux);
+          break;
+        case 5:
+          i->setCorreo(aux);
+          break;
+        case 6:
+          i->setDireccion(aux);
+          break;
+        case 7:
+          i->setRedesSociales(aux);
+          break;
+      }
+    }
+    in.addCliente(*i, "tmp.txt");
+  }
+  remove("agenda.txt");
+  rename("tmp.txt", "agenda.txt");
+}
+
+void Interfaz:: copiaSeguridad()
+{
+  list <Cliente> lista;
+  Interfaz in;
+  lista=in.getLista();
+  list <Cliente>:: iterator i;
+  ofstream copia("agendabin", ios:: binary);
+
+  for(i=lista.begin(); i!=lista.end(); i++)
+  {
+    copia<<i->getDNI()<<","<<i->getNombre()<<","<<i->getApellidos()<<","<<i->getTlfno()<<","<<i->getCorreo()<<","<<i->getDireccion()<<","<<i->getRedesSociales()<<","<<i->getVistas()<<"\n";
+  }
+  copia.close();
 }
