@@ -71,6 +71,8 @@ int main()
          }
         break;
       case 5:
+        in.ordenar();
+        cout<<"\nClientes ordenados.";
         break;
       case 6:
         in.copiaSeguridad();

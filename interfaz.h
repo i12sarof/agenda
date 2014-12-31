@@ -22,6 +22,7 @@ class Interfaz{
     list <Cliente> getLista();
     void modificaCliente(string apellido, string aux, int accion);
     void copiaSeguridad();
+    void ordenar();
 };
 
 #endif

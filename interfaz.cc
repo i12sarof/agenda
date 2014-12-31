@@ -244,3 +244,31 @@ void Interfaz:: copiaSeguridad()
   }
   copia.close();
 }
+
+bool comparapellidos(Cliente &c1, Cliente &c2)
+{
+  return c1.getApellidos()<c2.getApellidos();
+}
+
+void Interfaz:: ordenar()
+{
+  list <Cliente> clientes;
+  list <Cliente>:: iterator i;
+  clientes=getLista();
+
+/*  cout<<"\nLista sin ordenar:\n";
+  for(i=clientes.begin(); i!=clientes.end(); i++)
+  {
+    verCliente(*i);
+  }*/
+
+  clientes.sort(comparapellidos);
+//  cout<<"\nLista ordenada:\n";
+  for(i=clientes.begin(); i!=clientes.end(); i++)
+  {
+//    verCliente(*i);
+    addCliente(*i, "tmp.txt");
+  }
+  remove("agenda.txt");
+  rename("tmp.txt", "agenda.txt");
+}
