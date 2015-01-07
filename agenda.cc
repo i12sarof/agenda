@@ -37,6 +37,7 @@ int main()
           case 1:
             cout<<"\nDatos del cliente:\n";
             in.verCliente(clien);
+            in.modificaCliente(clien.getApellidos(), "nada", 8);
             break;
         }
         break;
