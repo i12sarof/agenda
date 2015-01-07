@@ -65,14 +65,15 @@ Cliente Interfaz:: crearCliente()
 
 void Interfaz:: verCliente(Cliente aux)
 {
-  cout<<"\nDNI:"<<aux.getDNI();
-  cout<<"\nNombre:"<<aux.getNombre();
-  cout<<"\nApellidos:"<<aux.getApellidos();
-  cout<<"\nTlfno:"<<aux.getTlfno();
-  cout<<"\nCorreo:"<<aux.getCorreo();
-  cout<<"\nDireccion:"<<aux.getDireccion();
-  cout<<"\nRedes Sociales:"<<aux.getRedesSociales();
-  cout<<"\nVeces visitado:"<<aux.getVistas()<<"\n";
+  Interfaz in;
+  cout<<"\nDNI: "<<aux.getDNI();
+  cout<<"\nNombre: "<<aux.getNombre();
+  cout<<"\nApellidos: "<<aux.getApellidos();
+  cout<<"\nTlfno: "<<aux.getTlfno();
+  cout<<"\nCorreo: "<<aux.getCorreo();
+  cout<<"\nDireccion: "<<aux.getDireccion();
+  cout<<"\nRedes Sociales: "<<aux.getRedesSociales();
+  cout<<"\nVeces visitado: "<<aux.getVistas()<<"\n";
 }
 
 int Interfaz:: addCliente(Cliente tipo, string nombre)
@@ -191,7 +192,7 @@ list <Cliente> Interfaz:: getLista()
 
 void Interfaz:: modificaCliente(string apellido, string aux, int accion)
 {
-  list <Cliente> lista;
+  list <Cliente> lista; int auxb;
   list <Cliente>:: iterator i;
   Interfaz in;
   lista=in.getLista();
@@ -221,6 +222,10 @@ void Interfaz:: modificaCliente(string apellido, string aux, int accion)
           break;
         case 7:
           i->setRedesSociales(aux);
+          break;
+        case 8:
+          auxb=i->getVistas();
+          i->setVistas((auxb+1));
           break;
       }
     }
