@@ -27,10 +27,11 @@ int Interfaz:: menuMod()
   cout<<"\nDNI------------------------>1.";
   cout<<"\nNombre--------------------->2.";
   cout<<"\nApellidos------------------>3.";
-  cout<<"\nTlfno---------------------->4.";
-  cout<<"\nCorreo--------------------->5.";
-  cout<<"\nDireccion------------------>6.";
-  cout<<"\nRedes---------------------->7.\n";
+  cout<<"\nCambiar Tlfno-------------->4.";
+  cout<<"\nAñadir Tlfno--------------->5.";
+  cout<<"\nCorreo--------------------->6.";
+  cout<<"\nDireccion------------------>7.";
+  cout<<"\nRedes---------------------->8.\n";
   cin>>aux;
   return aux;
 }
@@ -49,6 +50,7 @@ Cliente Interfaz:: crearCliente()
   tipo.setApellidos(aux);
   cout<<"\nTlfno:";
   cin>> aux;
+  aux+=";";
   tipo.setTlfno(aux);
   cout<<"\nCorreo:";
   cin>> aux;
@@ -65,22 +67,31 @@ Cliente Interfaz:: crearCliente()
 
 void Interfaz:: verCliente(Cliente aux)
 {
-  Interfaz in;
-  cout<<"\nDNI: "<<aux.getDNI();
-  cout<<"\nNombre: "<<aux.getNombre();
-  cout<<"\nApellidos: "<<aux.getApellidos();
-  cout<<"\nTlfno: "<<aux.getTlfno();
-  cout<<"\nCorreo: "<<aux.getCorreo();
-  cout<<"\nDireccion: "<<aux.getDireccion();
-  cout<<"\nRedes Sociales: "<<aux.getRedesSociales();
-  cout<<"\nVeces visitado: "<<aux.getVistas()<<"\n";
+  string auxb;
+  cout<<"\nDNI:"<<aux.getDNI();
+  cout<<"\nNombre:"<<aux.getNombre();
+  cout<<"\nApellidos:"<<aux.getApellidos();
+  cout<<"\nTelefono/s:";
+
+  auxb=aux.getTlfno();
+  cout<<"\n";
+  for(unsigned int i=0; i!=auxb.length(); i++)
+  {
+    if(auxb[i]!=';')
+      cout<<auxb[i];
+    else
+      cout<<"\n";
+  }
+  cout<<"Correo:"<<aux.getCorreo();
+  cout<<"\nDireccion:"<<aux.getDireccion();
+  cout<<"\nRedes Sociales:"<<aux.getRedesSociales();
+  cout<<"\nVeces visitado:"<<aux.getVistas()<<"\n";
 }
 
 int Interfaz:: addCliente(Cliente tipo, string nombre)
 {
   ofstream archivo(nombre.c_str(), ios::app);
 
- // setCliente(persona);
   archivo<<tipo.getDNI()<<","<<tipo.getNombre()<<","<<tipo.getApellidos()<<","<<tipo.getTlfno()<<","<<tipo.getCorreo()<<","<<tipo.getDireccion()<<","<<tipo.getRedesSociales()<<","<<tipo.getVistas()<<"\n";
   archivo.close();
   return 1;
@@ -192,9 +203,9 @@ list <Cliente> Interfaz:: getLista()
 
 void Interfaz:: modificaCliente(string apellido, string aux, int accion)
 {
-  list <Cliente> lista; int auxb;
+  list <Cliente> lista;
   list <Cliente>:: iterator i;
-  Interfaz in;
+  Interfaz in; int auxb;
   lista=in.getLista();
   for(i=lista.begin(); i!=lista.end(); i++)
   {
@@ -215,15 +226,20 @@ void Interfaz:: modificaCliente(string apellido, string aux, int accion)
           i->setTlfno(aux);
           break;
         case 5:
-          i->setCorreo(aux);
+          aux+=";";
+          aux+=i->getTlfno();
+          i->setTlfno(aux);
           break;
         case 6:
-          i->setDireccion(aux);
+          i->setCorreo(aux);
           break;
         case 7:
-          i->setRedesSociales(aux);
+          i->setDireccion(aux);
           break;
         case 8:
+          i->setRedesSociales(aux);
+          break;
+        case 100:
           auxb=i->getVistas();
           i->setVistas((auxb+1));
           break;
